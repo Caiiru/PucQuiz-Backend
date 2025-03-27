@@ -2,7 +2,7 @@
 
 # Techonologies
 - Kotlin
-- Java 17
+- Java 21
 - Spring Boot
 - Spring Web
 - Validation/IO
