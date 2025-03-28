@@ -14,6 +14,15 @@ class UserRepository {
         users[user.id!!] = user;
         return user;
     }
+
+    fun findall()=users.values.sortedBy { it.name };
+
+    fun findByIdOrNull(id:Long) = users[id];
+
+    fun deleteByID(id:Long)=
+        users.remove(id)
+
+
     companion object{
         private var lastId:Long = 0;
     }
