@@ -1,29 +1,13 @@
 ﻿package com.graspfy.graspit.User
 
-import org.springframework.stereotype.Component
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
+import org.springframework.stereotype.Repository
 
-@Component
-class UserRepository {
-    private val users = mutableMapOf<Long,User>()
+@Repository
+interface UserRepository:JpaRepository<User,Long> {
+    fun findByEmail(email:String):User?
 
-    fun save(user:User):User{
-        if(user.id == null){
-            lastId+=1;
-            user.id = lastId;
-        }
-        users[user.id!!] = user;
-        return user;
-    }
-
-    fun findall()=users.values.sortedBy { it.name };
-
-    fun findByIdOrNull(id:Long) = users[id];
-
-    fun deleteByID(id:Long)=
-        users.remove(id)
-
-
-    companion object{
-        private var lastId:Long = 0;
-    }
+    @Query("SELECT DISTINCT u FROM User u JOIN u.roles r WHERE r.name = :role")
+    fun findByRole(role: String): List<User>
 }
