@@ -1,20 +1,16 @@
 ﻿package com.graspfy.graspit.Quiz
 
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
+import java.math.BigInteger
 
 @Repository
-class QuizRepository {
-    var quizzes = mutableMapOf<Long,Quiz>();
+interface QuizRepository:JpaRepository<Quiz,Long> {
 
-    fun saveQuiz(quiz:Quiz):Quiz{
-        if(quiz.id == null){
-            quiz.id = lastID;
-        }
-        quizzes[quiz.id] = quiz;
-        return quizzes[quiz.id]!!;
-    }
+    @Query("select q from Quiz q where q.createdBy.id = :userId")
+    fun findQuizByUserId(userId: Long): List<Quiz>
 
-    companion object{
-        var lastID:Long = 0;
-    }
+
+
 }

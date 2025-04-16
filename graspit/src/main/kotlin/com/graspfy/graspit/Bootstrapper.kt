@@ -28,5 +28,23 @@ class Bootstrapper(
             admin.roles.add(adminRole)
             userRepository.save(admin)
         }
+        val userRole = rolesRepository.findByName("USER".uppercase())
+        if(userRepository.findByRole("USER").isEmpty()){
+            val user1 = User(
+                name = "USER USER",
+                email = "user1@gmail.com",
+                password = "user1"
+
+            )
+            val user2 = User(
+                name = "ANOTHER USER",
+                email = "user2@gmail.com",
+                password = "user2"
+
+            )
+            userRole?.let { user1.roles.add(it).also { user2.roles.add(userRole) } }
+            userRepository.save(user1)
+            userRepository.save(user2)
+        }
     }
 }
