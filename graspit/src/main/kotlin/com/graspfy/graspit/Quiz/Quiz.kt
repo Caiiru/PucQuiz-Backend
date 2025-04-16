@@ -1,11 +1,10 @@
 ﻿package com.graspfy.graspit.Quiz
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.graspfy.graspit.Quiz.questions.Question
+import com.graspfy.graspit.question.Question
 import com.graspfy.graspit.User.User
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
-import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 

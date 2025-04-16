@@ -30,7 +30,7 @@ class User(
     val email:String="email@email.com",
     val password:String="password",
 
-    @OneToMany(mappedBy = "createdBy")
+    @OneToMany(mappedBy = "createdBy", cascade = [CascadeType.ALL],orphanRemoval = true)
     var quizzes: MutableSet<Quiz>? = mutableSetOf(),
 
     @ManyToMany
