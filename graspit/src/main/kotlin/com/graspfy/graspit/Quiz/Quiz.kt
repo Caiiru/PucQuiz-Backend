@@ -22,7 +22,7 @@ class Quiz(
     @Column(name="created_at", updatable = false)
     val createdAt: ZonedDateTime = ZonedDateTime.now(ZoneId.systemDefault()),
 
-    @OneToMany(mappedBy = "id", cascade = [(CascadeType.ALL)])
+    @OneToMany(mappedBy = "quiz", cascade = [(CascadeType.ALL)])
     var questions:MutableSet<Question>? = mutableSetOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)

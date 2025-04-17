@@ -13,10 +13,10 @@ data class CreateQuestionRequest (
 
     @NotBlank
     val questionType:Int,
-
+    @NotBlank
     val timeLimit:Int=15,
 
-    val answers: MutableSet<CreateAnswerRequest>? = mutableSetOf(),
+    val answers: MutableSet<CreateAnswerRequest>?
 
     ){
     fun toQuestion() = Question(

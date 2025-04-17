@@ -20,6 +20,6 @@ class Answer (
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     @JsonIgnore
-    val question:Question?=null,
+    var question:Question?=null,
 
 )

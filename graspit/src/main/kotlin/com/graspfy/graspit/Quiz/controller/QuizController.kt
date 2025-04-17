@@ -3,9 +3,8 @@
 import com.graspfy.graspit.Quiz.QuizService
 import com.graspfy.graspit.Quiz.controller.Request.CreateQuizRequest
 import com.graspfy.graspit.Quiz.controller.Request.PatchQuizRequest
+import com.graspfy.graspit.Quiz.controller.response.FullQuizResponse
 import com.graspfy.graspit.Quiz.controller.response.QuizResponse
-import com.graspfy.graspit.question.Question
-import com.graspfy.graspit.question.request.CreateAnswerRequest
 import com.graspfy.graspit.question.request.CreateQuestionRequest
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -25,16 +24,30 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/quizzes")
 class QuizController(val quizService: QuizService) {
 
-    @PostMapping()
-    fun insert(@RequestBody @Valid quiz: CreateQuizRequest) =
-        QuizResponse(quizService.insertQuiz(quiz.toQuiz(),quiz.userID))
+    @PostMapping
+    fun insert(@RequestBody @Valid quiz: CreateQuizRequest,
+               @RequestParam @RequestBody userID:Long) =
+        FullQuizResponse(quizService.insertQuiz(quiz,userID))
             .let { ResponseEntity.status(HttpStatus.CREATED).body(it) }
 
 
-    @GetMapping()
-    fun findAllQuizCreatedBy(@RequestParam userID:Long)=
-        quizService.findByUserId(userID)
+    @GetMapping("/quizzer/{id}")
+    fun findAllQuizCreatedBy(@PathVariable id:Long)=
+        quizService.findByUserId(id)
             .let { ResponseEntity.ok(it) }
+
+    @GetMapping("{id}")
+    fun findByID(@PathVariable id:Long)=
+        quizService.findByIDOrNull(id)
+            ?.let { ResponseEntity.ok(FullQuizResponse(it)) }
+            ?: ResponseEntity.notFound().build()
+
+    @GetMapping
+    fun findAll()=
+        quizService.findAll()
+            .map { QuizResponse(it) }
+            .let { ResponseEntity.ok(it) }
+
 
     @DeleteMapping("/{id}")
     fun deleteByID(@PathVariable id:Long)=
@@ -51,11 +64,11 @@ class QuizController(val quizService: QuizService) {
             ?:ResponseEntity.noContent().build()
 
     @PutMapping("/{id}")
-    fun addQuestion(@PathVariable id:Long, question:CreateQuestionRequest,answers:List<CreateAnswerRequest>):ResponseEntity<Void>{
-        return if(quizService.addQuestion(id,question,answers))
-            ResponseEntity.ok().build()
+    fun addQuestion(@PathVariable id:Long, @RequestBody @Valid question:CreateQuestionRequest){
+        if(quizService.addQuestion(id,question))
+            ResponseEntity.ok()
         else
-            ResponseEntity.notFound().build()
+            ResponseEntity.notFound()
     }
 
 
