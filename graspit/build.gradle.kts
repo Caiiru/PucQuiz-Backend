@@ -46,6 +46,9 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
 
 
+	//Websocket
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-websocket
+	implementation("org.springframework.boot:spring-boot-starter-websocket:3.4.5")
 
 }
 
