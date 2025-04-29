@@ -6,6 +6,7 @@ import com.graspfy.graspit.User.User
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
 @Entity
@@ -20,7 +21,7 @@ class Quiz(
     var title:String = "title",
 
     @Column(name="created_at", updatable = false)
-    val createdAt: ZonedDateTime = ZonedDateTime.now(ZoneId.systemDefault()),
+    val createdAt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
 
     @OneToMany(mappedBy = "quiz", cascade = [(CascadeType.ALL)])
     var questions:MutableSet<Question>? = mutableSetOf(),

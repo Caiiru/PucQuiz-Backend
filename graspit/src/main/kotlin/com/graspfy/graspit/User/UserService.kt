@@ -4,6 +4,9 @@
 import com.graspfy.graspit.Exception.BadRequestException
 import com.graspfy.graspit.Exception.NotFoundException
 import com.graspfy.graspit.Role.RoleRepository
+import com.graspfy.graspit.User.Controller.Response.LoginResponse
+import com.graspfy.graspit.User.Controller.Response.UserResponse
+import com.graspfy.graspit.security.JWT
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service
 class UserService(
     val userRepository: UserRepository,
     val roleRepository: RoleRepository,
+    val jwt: JWT
 ) {
 
     fun insertUser(user: User):User{
@@ -78,9 +82,24 @@ class UserService(
 
         return true;
     }
+    fun login(email:String,password:String):LoginResponse?{
+        val user = userRepository.findByEmail(email)
+        if(user == null){
+            log.warn("User {} not found",email)
+            return null
+        }
 
-    companion object{
-        private val log = LoggerFactory.getLogger(UserService::class.java)
+        if(password!=user.password){
+            log.warn("User {} not found",password)
+        }
+        log.info("User id={} email={} logged in",user.id,user.email)
+        return LoginResponse(
+            token = jwt.createToken(user),
+            UserResponse(user)
+        )
     }
 
+    companion object{
+        val log = LoggerFactory.getLogger(UserService::class.java)
+    }
 }
