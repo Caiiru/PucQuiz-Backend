@@ -70,7 +70,7 @@ class QuizService(private val quizRepository:QuizRepository,
     fun findByUserId(userId: Long): List<Quiz> {
         val user: User = userRepository.findByIdOrNull(userId)
             ?: throw NotFoundException("User not found")
-        return quizRepository.findQuizByUserId(userId)
+        return quizRepository.findQuizByUserId(user.id!!)
     }
     fun findByIDOrNull(id: Long): Quiz? {
         return quizRepository.findByIdOrNull(id)
@@ -86,19 +86,20 @@ class QuizService(private val quizRepository:QuizRepository,
     fun addQuestion(quizId:Long, question: CreateQuestionRequest  ):Boolean{
         val quiz = quizRepository.findByIdOrNull(quizId) ?: throw NotFoundException("Quiz not found")
 
-        /*
+
         val q=Question(question_text = question.questionText,
             question_type = question.questionType,
             time_limit = question.timeLimit,
-            quiz_id = quizId,)
+            id = quizId)
+
+        q.answers= question.answers?.map{it.toAnswer()}?.toMutableSet()
 
         //answers.forEach { a -> Answer(answer=a.answerText, isCorrect = a.isCorrect, question = q).let { q.answers!!.add(it) } }
 
         quiz.questions!!.add(q)
         quizRepository.save(quiz)
-        */
-        return true
 
+        return true
     }
 
 
