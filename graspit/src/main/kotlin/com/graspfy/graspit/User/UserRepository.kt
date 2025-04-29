@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository
 interface UserRepository:JpaRepository<User,Long> {
     fun findByEmail(email:String):User?
 
-    @Query("SELECT DISTINCT u FROM User u JOIN u.roles r WHERE r.name = :role")
+    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = :role")
     fun findByRole(role: String): List<User>
 }

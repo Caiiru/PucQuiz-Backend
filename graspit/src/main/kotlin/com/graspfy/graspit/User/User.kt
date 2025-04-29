@@ -15,6 +15,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 @Entity
+@Table(name="TblUser")
 class User(
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
