@@ -1,6 +1,6 @@
 ﻿package com.graspfy.graspit.websocket
 
-class HelloMessage(name: String) {
+class HelloMessage(name: String?=null) {
 
     var name : String? = null
 

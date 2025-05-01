@@ -31,12 +31,12 @@ class UserController(val userService: UserService) {
 
     @PatchMapping("/{id}")
     @PreAuthorize("permitAll()")
-    @SecurityRequirement(name="GraspAuthServer")
+    //@SecurityRequirement(name="GraspAuthServer")
     fun update(
         @PathVariable id:Long,
-        @Valid @RequestBody request: PatchUserRequest, auth:Authentication):ResponseEntity<UserResponse> {
-        val token = auth.principal as? UserToken?:throw ForbiddenException()
-        if(token.id != id && !token.isAdmin) throw ForbiddenException()
+        @Valid @RequestBody request: PatchUserRequest):ResponseEntity<UserResponse> {
+        //val token = auth.principal as? UserToken?:throw ForbiddenException()
+        //if(token.id != id && !token.isAdmin) throw ForbiddenException()
 
 
         return userService.update(id, request.name!!)
@@ -61,7 +61,7 @@ class UserController(val userService: UserService) {
 
 
     @PreAuthorize("hasRole('ADMIN')")
-    @SecurityRequirement(name="GraspAuthServer")
+    //@SecurityRequirement(name="GraspAuthServer")
     @DeleteMapping("/{id}")
     fun deleteByID(@PathVariable id:Long) =
         userService.removeUserByID(id)
@@ -70,7 +70,7 @@ class UserController(val userService: UserService) {
 
     @PutMapping("/{id}/roles/{role}")
     @PreAuthorize("hasRole('ADMIN')")
-    @SecurityRequirement(name="GraspAuthServer")
+    //@SecurityRequirement(name="GraspAuthServer")
     fun grant(@PathVariable id:Long, @PathVariable role:String="role name"):ResponseEntity<Void> =
         if (userService.addRole(id,role.uppercase()))
             ResponseEntity.ok().build()

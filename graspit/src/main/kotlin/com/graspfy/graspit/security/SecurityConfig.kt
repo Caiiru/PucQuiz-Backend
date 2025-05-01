@@ -19,9 +19,11 @@ import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
 
+
 @Configuration
 @EnableMethodSecurity
 //CONFIG DO SWAGGER
+/*
 @SecurityScheme(
     name="GraspAuthServer",
     type = SecuritySchemeType.HTTP,
@@ -29,39 +31,47 @@ import org.springframework.web.filter.CorsFilter
     bearerFormat = "JWT"
 )
 
-class SecurityConfig(val jwtToken: JwtTokenFilter) {
+ */
+//class SecurityConfig(val jwtToken: JwtTokenFilter) { // NO SECURITY
+
+class SecurityConfig() {
     @Bean
     fun mvc(introspector: HandlerMappingIntrospector)=
         MvcRequestMatcher.Builder(introspector)
     @Bean
     fun filterChain(security:HttpSecurity,mvc:MvcRequestMatcher.Builder):DefaultSecurityFilterChain {
-        return security.cors(Customizer.withDefaults())
-            .csrf { it.disable() }
-            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-            .exceptionHandling {
-                it.authenticationEntryPoint { _, res, ex ->
-                    res.sendError(
-                        SC_UNAUTHORIZED,
-                        if (ex.message.isNullOrEmpty()) "UNAUTHORIZED" else ex.message
-                    )
-                }
-            }
-            .headers { it.frameOptions { fo -> fo.disable() } }
-            .authorizeHttpRequests { requests ->
-                requests
-                    .requestMatchers(antMatcher(HttpMethod.GET)).permitAll()
-                    .requestMatchers(mvc.pattern(HttpMethod.POST, "/users")).permitAll()
-                    .requestMatchers(mvc.pattern(HttpMethod.POST, "users/login")).permitAll()
-                    .anyRequest().authenticated()
-            }
-            .addFilterBefore(jwtToken,BasicAuthenticationFilter::class.java )
+        return security.csrf{it.disable()}
+            .authorizeHttpRequests{requests -> requests.anyRequest().permitAll()}
+            .headers{it.frameOptions{fo-> fo.disable()}}
             .build()
+//        return security.cors(Customizer.withDefaults())
+//            .csrf { it.disable() }
+//            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+//            .exceptionHandling {
+//                it.authenticationEntryPoint { _, res, ex ->
+//                    res.sendError(
+//                        SC_UNAUTHORIZED,
+//                        if (ex.message.isNullOrEmpty()) "UNAUTHORIZED" else ex.message
+//                    )
+//                }
+//            }
+//            .headers { it.frameOptions { fo -> fo.disable() } }
+//            .authorizeHttpRequests { requests ->
+//                requests
+//                    .requestMatchers(antMatcher(HttpMethod.GET)).permitAll()
+//                    .requestMatchers(mvc.pattern(HttpMethod.POST, "/users")).permitAll()
+//                    .requestMatchers(mvc.pattern(HttpMethod.POST, "users/login")).permitAll()
+//                    .anyRequest().permitAll()
+//            }
+//            .build()
     }
     @Bean
     fun corsFilter()=CorsConfiguration().apply{
         addAllowedHeader("*")
         addAllowedMethod("*")
         addAllowedOrigin("*")
+        addAllowedOriginPattern("*")
+
     }
         .let { UrlBasedCorsConfigurationSource().apply {
             registerCorsConfiguration("/**",it)

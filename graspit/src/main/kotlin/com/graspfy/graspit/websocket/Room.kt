@@ -72,6 +72,5 @@ class Room (
         val isHost:Boolean,
         var lastAnswer: Int?,
         var asnwerTime: Long?
-
     )
 }
