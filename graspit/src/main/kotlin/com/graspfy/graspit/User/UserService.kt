@@ -84,15 +84,18 @@ class UserService(
     }
     fun login(email:String,password:String):LoginResponse?{
         val user = userRepository.findByEmail(email)
+        log.debug("Login attempt: email {}, password {}", email, password)
         if(user == null){
             log.warn("User {} not found",email)
-            return null
+            throw BadRequestException("Email or password is wrong")
+
         }
 
         if(password!=user.password){
-            log.warn("User {} not found",password)
+            log.warn("password {} is wrong",password)
+            throw BadRequestException("Email or password is wrong")
         }
-        log.info("User id={} email={} logged in",user.id,user.email)
+        log.info("User id={} email={} password = {} logged in",user.id,user.email,user.password)
         return LoginResponse(
             token = jwt.createToken(user),
             UserResponse(user)
